@@ -1,14 +1,14 @@
-import os
+from app import create_app
+from app.db import db
 
-from flask import Flask
+app = create_app()
 
-app = Flask(__name__)
-
-@app.route("/")
-def hello_world():
-  """Example Hello World route."""
-  name = os.environ.get("NAME", "World")
-  return f"Hello {name}!"
+@app.cli.command("init-db")
+def init_db():
+    """Create all database tables."""
+    with app.app_context():
+        db.create_all()
+    print("Database initialized.")
 
 if __name__ == "__main__":
-  app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 3000)))
+    app.run(host="0.0.0.0", port=3000)
